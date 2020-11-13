@@ -12,6 +12,7 @@ $ make proto
 ## Run grpc and grpc-gateway
 
 ```
+$ export GRPC_GO_LOG_SEVERITY_LEVEL=info GRPC_GO_LOG_VERBOSITY_LEVEL=2 // for info log
 $ go run cmd/grpc/main.go // in a terminal
 $ go run cmd/grpc_gateway/main.go // in another terminal
 ```
