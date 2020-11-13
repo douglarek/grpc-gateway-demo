@@ -8,6 +8,7 @@ import (
 	pb "github.com/douglarek/grpc-gateway-demo/proto/gen/go/echo/service/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/grpclog"
+	"google.golang.org/grpc/reflection"
 )
 
 const (
@@ -31,6 +32,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
+	reflection.Register(s)
 	pb.RegisterEchoServiceServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

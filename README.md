@@ -33,28 +33,69 @@ Open [http://localhost:8081/swaggerui/](http://localhost:8081/swaggerui/) in the
 
 ## Benchmark
 
+You need install [wrk](https://github.com/wg/wrk) and [ghz](https://github.com/bojand/ghz).
+
 ```
 MacBook Pro, 2.2 GHz Quad-Core Intel Core i7, 16 GB 1600 MHz DDR3
 
-$ make wrk
+$ make bench
 
 wrk -c 100 -t 10 -d 60s -s script/post.lua http://localhost:8081/v1/echo
 Running 1m test @ http://localhost:8081/v1/echo
   10 threads and 100 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     6.11ms    5.57ms 123.36ms   94.20%
-    Req/Sec     1.78k   284.24     2.51k    81.53%
-  1065545 requests in 1.00m, 179.86MB read
-Requests/sec:  17740.54
-Transfer/sec:      2.99MB
-
+    Latency     6.72ms    6.55ms 125.51ms   94.79%
+    Req/Sec     1.66k   312.74     2.92k    80.13%
+  994330 requests in 1.00m, 167.84MB read
+Requests/sec:  16547.56
+Transfer/sec:      2.79MB
 wrk -c 100 -t 10 -d 60s -s script/post.lua http://localhost:8081/v1/http/echo
 Running 1m test @ http://localhost:8081/v1/http/echo
   10 threads and 100 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     2.10ms    1.75ms  62.28ms   85.35%
-    Req/Sec     5.04k   381.28     6.86k    79.48%
-  3006556 requests in 1.00m, 378.48MB read
-Requests/sec:  50099.69
-Transfer/sec:      6.31MB
+    Latency     2.66ms    5.83ms 143.79ms   98.39%
+    Req/Sec     4.86k   753.06     6.28k    83.08%
+  2899982 requests in 1.00m, 365.06MB read
+Requests/sec:  48315.93
+Transfer/sec:      6.08MB
+ghz --insecure -c 100 --connections 10 -x 60s --call echo.service.v1.EchoService.Echo -d '{"value":"world"}' localhost:9090
+
+Summary:
+  Count:	1471168
+  Total:	60.00 s
+  Slowest:	115.95 ms
+  Fastest:	0.15 ms
+  Average:	3.86 ms
+  Requests/sec:	24519.07
+
+Response time histogram:
+  0.148 [1]	|
+  11.729 [967417]	|∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎∎
+  23.309 [28073]	|∎
+  34.889 [3171]	|
+  46.469 [862]	|
+  58.050 [266]	|
+  69.630 [131]	|
+  81.210 [37]	|
+  92.791 [32]	|
+  104.371 [2]	|
+  115.951 [8]	|
+
+Latency distribution:
+  10 % in 1.10 ms
+  25 % in 1.81 ms
+  50 % in 2.99 ms
+  75 % in 4.79 ms
+  90 % in 7.44 ms
+  95 % in 9.89 ms
+  99 % in 18.18 ms
+
+Status code distribution:
+  [OK]            1471157 responses
+  [Unavailable]   10 responses
+  [Canceled]      1 responses
+
+Error distribution:
+  [10]   rpc error: code = Unavailable desc = transport is closing
+  [1]    rpc error: code = Canceled desc = grpc: the client connection is closing
 ```

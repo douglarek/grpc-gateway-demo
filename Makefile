@@ -19,9 +19,10 @@ proto:
 		--openapiv2_opt logtostderr=true \
 		echo/service/v1/echo_service.proto
 
-wrk:
+bench:
 	wrk -c 100 -t 10 -d 60s -s script/post.lua http://localhost:8081/v1/echo
 	wrk -c 100 -t 10 -d 60s -s script/post.lua http://localhost:8081/v1/http/echo
+	ghz --insecure -c 100 --connections 10 -x 60s --call echo.service.v1.EchoService.Echo -d '{"value":"world"}' localhost:9090
 
 .PHONY: deps proto wrk
 
