@@ -19,6 +19,10 @@ proto:
 		--openapiv2_opt logtostderr=true \
 		echo/service/v1/echo_service.proto
 
-.PHONY: deps proto
+wrk:
+	wrk -c 100 -t 10 -d 60s -s script/post.lua http://localhost:8081/v1/echo
+	wrk -c 100 -t 10 -d 60s -s script/post.lua http://localhost:8081/v1/http/echo
+
+.PHONY: deps proto wrk
 
 
