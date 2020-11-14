@@ -99,3 +99,10 @@ Error distribution:
   [10]   rpc error: code = Unavailable desc = transport is closing
   [1]    rpc error: code = Canceled desc = grpc: the client connection is closing
 ```
+
+## GRPC Health Checking
+
+```
+$ grpc-health-probe -addr=localhost:9090
+status: SERVING
+```
